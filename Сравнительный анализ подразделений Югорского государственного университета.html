@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сравнительный анализ подразделений Югорского государственного университета</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+    button, input, select, textarea { font-family: inherit; }
+    body { background: #ffffff; color: #1e293b; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header {
+      background: linear-gradient(135deg, #0166A8 0%, #028B56 100%);
+      color: white;
+      padding: 24px 30px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+    }
+    header h1 { font-weight: 600; font-size: 2.0rem; letter-spacing: -0.5px; }
+    header .sub { font-size: 1rem; opacity: 0.9; margin-top: 4px; }
+    .tabs { display: flex; gap: 6px; border-bottom: 2px solid #e2e8f0; margin-bottom: 25px; flex-wrap: wrap; }
+    .tab-btn {
+      padding: 12px 24px; background: transparent; border: none; font-size: 1rem; font-weight: 500;
+      color: #475569; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.2s; border-radius: 8px 8px 0 0;
+    }
+    .tab-btn:hover { background: #f1f5f9; color: #0b3b5c; }
+    .tab-btn.active { color: #0166A8; border-bottom-color: #028B56; font-weight: 600; background: #f8fafc; }
+    .tab-content { display: none; animation: fade 0.3s; }
+    .tab-content.active { display: block; }
+    @keyframes fade { from { opacity: 0.3; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stat-card { background: #f8fafc; border-radius: 16px; padding: 18px 20px; border-left: 5px solid #028B56; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .stat-card .number { font-size: 2.2rem; font-weight: 700; color: #0166A8; }
+    .stat-card .label { font-size: 0.9rem; color: #475569; margin-top: 4px; }
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      background: #f8fafc;
+      padding: 16px 20px;
+      border-radius: 16px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+    .tag-item {
+      background: white;
+      padding: 3px 12px;
+      border-radius: 30px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.5;
+      display: inline-block;
+    }
+    .tag-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+      border-color: #0166A8;
+    }
+    .tag-item .count {
+      display: inline-block;
+      background: #0166A8;
+      color: white;
+      border-radius: 20px;
+      padding: 0 8px;
+      margin-left: 5px;
+      font-size: 0.65em;
+      font-weight: 600;
+      vertical-align: middle;
+    }
+    .tag-item .units {
+      display: block;
+      font-size: 0.6rem;
+      color: #64748b;
+      margin-top: 1px;
+      text-align: center;
+    }
+    .project-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 16px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+    .project-item {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      background: white;
+      padding: 2px 10px 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      cursor: default;
+      transition: 0.2s;
+      line-height: 1.4;
+    }
+    .project-item:hover {
+      transform: scale(1.02);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-color: #028B56;
+    }
+    .project-item .proj-name {
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+    .project-item .proj-unit {
+      font-size: 0.55rem;
+      color: #64748b;
+      margin-top: 1px;
+    }
+    .table-wrap { background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.04); overflow-x: auto; overflow-y: auto; max-height: 600px; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 900px; }
+    .table-wrap thead { position: sticky; top: 0; z-index: 10; }
+    .table-wrap thead th {
+      background: #f1f5f9; position: sticky; top: 0; z-index: 10; font-weight: 600; padding: 14px 12px;
+      text-align: left; border-bottom: 2px solid #d1d9e6; white-space: nowrap; color: #0166A8;
+    }
+    td { padding: 12px; border-bottom: 1px solid #e9edf2; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .color-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+    .unique-list { list-style: none; padding-left: 0; }
+    .unique-list li { padding: 6px 0 6px 24px; position: relative; border-bottom: 1px solid #f1f5f9; }
+    .unique-list li::before { content: "◆"; position: absolute; left: 0; color: #028B56; font-weight: bold; }
+    .target-list { list-style: none; padding-left: 0; }
+    .target-list li { padding: 4px 0; }
+    .target-list li strong { color: #0166A8; }
+
+    /* ---- unique-metrics tab ---- */
+    .legend-note { display: flex; gap: 22px; align-items: center; margin: 6px 0 18px; font-size: 0.72rem; color: #475569; flex-wrap: wrap; }
+    .legend-swatch { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: middle; border: 1px solid rgba(0,0,0,0.1); }
+    .charts-grid-unique { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    .chart-box-unique { background: #f8fafc; border-radius: 16px; padding: 20px 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+    .chart-box-unique h4 { color: #0166A8; margin-bottom: 14px; font-weight: 600; }
+    .metric-circles { display: flex; flex-wrap: wrap; gap: 26px 28px; }
+    .metric-item { display: flex; flex-direction: column; align-items: center; width: 168px; text-align: center; }
+    .metric-label { font-size: 0.72rem; color: #475569; line-height: 1.3; margin-bottom: 10px; min-height: 40px; }
+    .metric-ring { position: relative; width: 132px; height: 132px; flex-shrink: 0; }
+    .metric-ring-svg { position: absolute; top: 0; left: 0; }
+    .ring-segment { cursor: pointer; transition: filter 0.15s, opacity 0.15s; }
+    .ring-segment:hover { filter: brightness(1.18); }
+    .ring-segment.dimmed { opacity: 0.35; }
+    .metric-ring-hole {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 96px; height: 96px; border-radius: 50%; background: #ffffff;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+      pointer-events: none;
+    }
+    .metric-value { font-size: 0.72rem; font-weight: 700; color: #0f2942; line-height: 1.2; }
+    .metric-year { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+    .metric-caption { font-size: 0.72rem; color: #94a3b8; margin-top: 8px; line-height: 1.35; }
+    .metric-empty { color: #94a3b8; font-size: 0.72rem; font-style: italic; }
+
+    /* ---- Ring tooltip ---- */
+    .ring-tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: #0f2942;
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: opacity 0.1s;
+      z-index: 2000;
+      white-space: nowrap;
+    }
+    .ring-tooltip.visible { opacity: 1; }
+
+    /* ---- Модальное окно ---- */
+    body.no-scroll { overflow: hidden; padding-right: var(--scrollbar-width, 0px); }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background: white;
+      max-width: 900px;
+      max-height: 80vh;
+      width: 95%;
+      border-radius: 20px;
+      padding: 30px;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      line-height: 1;
+      width: auto;
+      height: auto;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #1e293b;
+      padding: 4px 8px;
+    }
+    .modal-close:hover { color: #0166A8; transform: scale(1.1); }
+    .modal-content h2 { color: #0166A8; margin-bottom: 16px; }
+    .modal-unit { margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+    .modal-unit h4 { color: #0b3b5c; margin-bottom: 4px; }
+    .modal-unit p { font-size: 0.9rem; color: #475569; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>Сравнительный анализ подразделений Югорского государственного университета</h1>
+      <div class="sub">13 подразделений · Стратегии 2026–2036</div>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab-overview">Обзор</button>
+    <button class="tab-btn" data-tab="tab-key">Ключевые показатели</button>
+    <button class="tab-btn" data-tab="tab-table">Детальная таблица</button>
+    <button class="tab-btn" data-tab="tab-unique">Уникальные особенности</button>
+    <button class="tab-btn" data-tab="tab-charts-unique">Уникальные количественные показатели</button>
+  </div>
+
+  <div id="tab-overview" class="tab-content active">
+    <div class="stats-grid" id="statsGrid"></div>
+    <div style="background:#f8fafc; border-radius:16px; padding:18px 24px; margin:20px 0;">
+      <h3 style="font-weight:500; color:#0166A8; margin-bottom:12px;">Ключевые темы (нажмите на тег, чтобы увидеть связанные проекты)</h3>
+      <div class="tag-cloud" id="tagCloud"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
+      <div style="background:#f8fafc; border-radius:16px; padding:20px;">
+        <h4 style="color:#0166A8; margin-bottom:8px;">Самые частые целевые показатели</h4>
+        <ul class="target-list" id="commonTargets"></ul>
+      </div>
+      <div style="background:#f8fafc; border-radius:16px; padding:20px;">
+        <h4 style="color:#0166A8; margin-bottom:8px;">Уникальные проекты</h4>
+        <div class="project-cloud" id="projectCloud"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-key" class="tab-content">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Подразделение</th>
+            <th>Контингент<br>(текущий)</th>
+            <th>Контингент<br>(план)</th>
+            <th>Трудоустройство<br>(план, %)</th>
+            <th>Средний балл ЕГЭ<br>(текущий)</th>
+            <th>Средний балл ЕГЭ<br>(план)</th>
+            <th>Доходы от ДПО<br>(план, млн руб.)</th>
+            <th>Доходы от НИОКР<br>(план, млн руб.)</th>
+          </tr>
+        </thead>
+        <tbody id="keyTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-table" class="tab-content">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Подразделение</th>
+            <th>Стратегические направления</th>
+            <th>Ключевые проекты и способы реализации</th>
+            <th>Приоритеты развития</th>
+            <th>Сильные стороны</th>
+            <th>Основные проблемы</th>
+            <th>Уникальность</th>
+          </tr>
+        </thead>
+        <tbody id="detailTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="tab-unique" class="tab-content">
+    <div style="background:#f8fafc; border-radius:16px; padding:20px 24px;">
+      <h3 style="color:#0166A8; margin-bottom:16px;">Уникальные особенности каждого подразделения</h3>
+      <ul class="unique-list" id="uniqueList"></ul>
+    </div>
+  </div>
+
+  <div id="tab-charts-unique" class="tab-content">
+    <div style="background:#f8fafc; border-radius:16px; padding:20px 24px;">
+      <h3 style="color:#0166A8; margin-bottom:8px;">Уникальные количественные показатели</h3>
+      <div class="legend-note">
+        <span><span class="legend-swatch" style="background:#028B56;"></span>факт (текущее значение)</span>
+        <span><span class="legend-swatch" style="background:#0166A8;"></span>план по годам</span>
+        <span style="color:#94a3b8;">Наведите на сектор диаграммы, чтобы увидеть год и значение.</span>
+      </div>
+      <div class="charts-grid-unique" id="uniqueChartsGrid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tooltip для колец -->
+<div class="ring-tooltip" id="ringTooltip"></div>
+
+<!-- Модальное окно -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <h2 id="modalTitle">Проекты по теме</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const FACT_COLOR = '#028B56';
+const PLAN_COLOR = '#0166A8';
+
+const manualProjects = [
+  { name: 'Геопарк ЮНЕСКО', unit: 'ВЭШ' },
+  { name: 'Карбоновый полигон Мухрино', unit: 'ВЭШ' },
+  { name: 'Биоресурсный центр ЮГУ', unit: 'ВЭШ' },
+  { name: 'Научно-образовательный центр грибных биотехнологий', unit: 'ВЭШ' },
+  { name: 'Цифровой двойник лесных территорий Севера', unit: 'ВЭШ' },
+  { name: 'Бакалавриат "Химическая технология реагентов"', unit: 'ВНШ' },
+  { name: 'Юридическая клиника 2.0', unit: 'ВШП' },
+  { name: 'Экспертно-консультационный центр ВШП', unit: 'ВШП' },
+  { name: 'Лаборатория правового обеспечения цифровой трансформации', unit: 'ВШП' },
+  { name: 'Проект "Конституция для юных граждан"', unit: 'ВШП' },
+  { name: 'Система образовательных игропрактик', unit: 'ЦОИ' },
+  { name: 'Учебная лаборатория искусственного интеллекта', unit: 'ИШЦТ' },
+  { name: 'Центр китайского языка и культуры "Ю-Дао"', unit: 'ВШГН' },
+  { name: 'Лаборатория современных медиа "Вспышка"', unit: 'ВШГН' },
+  { name: 'Лингво-переводческий корпус "Yugra Word Wizards"', unit: 'ВШГН' },
+  { name: 'Молодёжные промышленные маршруты Югры', unit: 'ИНТех / ВЭШ' },
+];
+
+const units = [
+  {
+    id: 'vesh', name: 'Высшая экологическая школа', short: 'ВЭШ', color: '#2b7a4b',
+    contingent: 294, contingentPlan: null, employment: 90, dpoIncome: 2.0, niokrIncome: 10.0, ege: null, egePlan: 65,
+    strategic: ['Низкоуглеродное природопользование','Экологический туризм','Карбоновый полигон','Геопарк ЮНЕСКО'],
+    projects: [
+      { name: 'Биоресурсный центр ЮГУ', implementation: 'Создание центра на базе лабораторий для развития генетических исследований и биотехнологий, экспорт интеллектуальных услуг.' },
+      { name: 'Научно-образовательный центр грибных биотехнологий', implementation: 'Разработка и внедрение природоподобных биотехнологий, адаптированных к условиям Севера и Арктики.' },
+      { name: 'Геопарк ЮНЕСКО', implementation: 'Участие в развитии геопарка как инструмента устойчивого развития Югры, привлечение туристов и исследователей.' },
+      { name: 'Молодёжные промышленные маршруты Югры', implementation: 'Организация профориентационных экспедиций и стажировок для молодёжи на промышленные объекты.' },
+      { name: 'Экологический туризм на ООПТ', implementation: 'Разработка и продвижение туристических маршрутов с участием студентов и местных сообществ.' },
+      { name: 'Цифровой двойник лесных территорий Севера', implementation: 'Совместно с КАРБОН ДАТА ЦЕНТР – цифровые модели для мониторинга и прогнозирования климатических и экосистемных рисков.' },
+      { name: 'Карбоновый полигон Мухрино: от мониторинга к климатической экономике', implementation: 'Совместно с КАРБОН ДАТА ЦЕНТР.' },
+      { name: 'Школьный университет: профильные классы', implementation: 'Общеуниверситетский проект ЮГУ – ранняя профориентация школьников.' },
+      { name: 'Открывая ЮГУ: развитие лабораторий и экспозиционных пространств', implementation: 'Формирование выставочных креативных пространств и озеленение 1–2 этажей 1 корпуса университета.' },
+      { name: 'Университетский БАС-сервис', implementation: 'Общеуниверситетский проект ЮГУ.' },
+      { name: 'Новые кадры для технологического суверенитета', implementation: 'Образовательные программы «полного цикла».' },
+      { name: 'Открытое образование: международная конкурентоспособность', implementation: 'Программы на иностранном языке: магистратура "Carbon Neutrality and Climate Resilience" (Ecology and Environmental Management), бакалавриат "International Tourism".' }
+    ],
+    priorities: ['Программы под индустриальный запрос','Современные технологии и мобильность','Проектно-деятельностные форматы','Сетевой формат и доп. квалификации','Программы на иностранном языке','Сетевые партнёры: Нижегородский госуниверситет им. Н.И. Лобачевского, Международный Университет Астаны, Белорусский государственный университет'],
+    strengths: ['Участие в международных проектах (Евразийский климатический консорциум, карбоновый полигон)','Широкий спектр уровней: бакалавриат, магистратура, аспирантура','Диссертационный совет с БашГУ по специальности 1.5.15 Экология','Научный журнал «Динамика окружающей среды и глобальные изменения климата» включается в перечень ВАК'],
+    problems: ['Рост доли молодых ППС (33% –> 38%) и остепенённости (67% –> 77%) как заявленная задача'],
+    unique: 'Единственное подразделение, реализующее проекты Геопарка ЮНЕСКО и карбонового полигона; совместный диссертационный совет с БашГУ; единственная программа с двумя полностью англоязычными образовательными треками (Carbon Neutrality and Climate Resilience, International Tourism).',
+    uniqMetrics: [
+      { label: 'Доходы от НТУ', plan: [15], planYears: [2031], unit: ' млн ₽' },
+      { label: 'Молодые учёные, к.н.', plan: [6], planYears: [2031], unit: ' чел.' },
+      { label: 'НПР до 39 лет', plan: [7], planYears: [2031], unit: ' чел.' },
+      { label: 'Слушатели ДПО', plan: [70], planYears: [2031], unit: ' чел.' },
+      { label: 'Целевое обучение', plan: [80], planYears: [2031], unit: '%' },
+      { label: 'ППС со средней зарплатой (ХМАО)', plan: [70], planYears: [2031], unit: '%' }
+    ]
+  },
+  {
+    id: 'lyantor', name: 'Лянторский нефтяной техникум', short: 'ЛНТ', color: '#b85c3a',
+    contingent: null, contingentPlan: null, employment: 95, dpoIncome: null, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Подготовка кадров для ТЭК','Кластер ПрофЮграТЭК','Непрерывное образование'],
+    projects: [
+      { name: 'Участие в кластере ПрофЮграТЭК', implementation: 'Сетевое взаимодействие с предприятиями ТЭК для дуального обучения и стажировок.' },
+      { name: 'Модернизация МТБ через пожертвования', implementation: 'Крановый узел (632,3 тыс. ₽), замерная установка АМ40-8-400, блок автоматики БА-1, капремонт кровли (20,39 млн ₽), робот-манипулятор и учебный токарный станок (7,44 млн ₽) – по договорам пожертвования.' },
+      { name: 'Развитие исследовательских компетенций студентов и преподавателей', implementation: 'Студенческое научное общество, ежегодное участие в международных и всероссийских олимпиадах, 3 преподавателя – эксперты нацчемпионата «Абилимпикс» и движения «Профессионалы».' }
+    ],
+    priorities: ['Практико-ориентированное обучение','Гибкие программы','Цифровые технологии','Преемственность с ЮГУ'],
+    strengths: ['90% трудоустройства','4-е место в РФ по трудоустройству СПО в ТЭК','Поддержка индустриальных партнёров','95% преподавателей – высшее образование, 8 преподавателей – практический опыт работы в отрасли, 62% – преподаватели общепрофессиональных дисциплин'],
+    problems: ['Зависимость модернизации от внешних пожертвований'],
+    unique: 'Единственное подразделение, чья модернизация базы детально раскрыта через механизм благотворительных пожертвований.',
+    uniqMetrics: [
+      { label: 'Пожертвования на модернизацию', fact: 28, unit: ' млн ₽' },
+      { label: 'Вовлечение в патриотику', plan: [85], planYears: [2031], unit: '%' },
+      { label: 'Охват наставничеством', plan: [40], planYears: [2031], unit: '%' },
+      { label: 'Клубы', plan: [4], planYears: [2031], unit: ' ед.' },
+      { label: 'Трудоустройство по профилю', plan: [95], planYears: [2031], unit: '%' },
+      { label: 'Психологическая помощь обратившимся', plan: [100], planYears: [2031], unit: '%' }
+    ]
+  },
+  {
+    id: 'industr', name: 'Индустриальный институт', short: 'ИИ', color: '#3a7ca5',
+    contingent: null, contingentPlan: 1150, employment: null, dpoIncome: 10.0, niokrIncome: 5.0, ege: 4.3, egePlan: 4.20,
+    strategic: ['Непрерывное инженерное образование','ТЭК ХМАО-Югры','СПО–ВО–ДПО'],
+    projects: [
+      { name: 'Развитие портфеля ОП СПО', implementation: 'Новые специальности: 15.02.18 – запуск в 2027 г., 09.02.09 – запуск в 2029 г.' },
+      { name: 'Развитие УПК', implementation: 'Организация реальных производственных заказов и вовлечение студентов.' },
+      { name: 'Развитие инфраструктуры СПО', implementation: 'Мастерская с числовым программным управлением, слесарная мастерская.' },
+      { name: 'Очная форма обучения ВО', implementation: '1 группа по направлению подготовки (НД).' },
+      { name: 'Открытие магистратуры', implementation: 'Траектория непрерывности СПО–бакалавриат–магистратура – новый драйвер развития.' },
+      { name: 'Мониторинг эффективности ВО', implementation: 'Профессионально-общественная аккредитация (ПОА), развитие НИР.' },
+      { name: 'Развитие портфеля ОП ДПО', implementation: 'Направления БАС, допуск ЭБ (эксплуатация электроустановок).' },
+      { name: 'Корпоративные программы РН-ГИР, ГПНХ', implementation: 'Повышение квалификации и профессиональная переподготовка для сотрудников нефтяных компаний.' },
+      { name: 'Расширение направлений повышения квалификации', implementation: 'Развитие портфеля программ ПК.' }
+    ],
+    priorities: ['Непрерывные траектории СПО–ВО–ДПО','Учебно-производственная деятельность и партнёрство с реальным сектором','Современные технологии и цифровые решения','Прикладные исследования и экспертные работы','Кадровая политика: привлечение молодых преподавателей, развитие кадрового резерва и системы наставничества, привлечение специалистов-практиков'],
+    strengths: ['3-е место в Национальном рейтинге трудоустройства выпускников','Рост научных публикаций, статей и учебных пособий (20 за 2024–2026 годы)','Успешная аккредитация по специальности «Электрические станции, сети, их релейная защита и автоматизация»','Рост доходов от ДПО с 81 тыс. ₽ (2023) до 4,137 млн ₽ (2025)'],
+    problems: ['Явного раздела проблем/вызовов или SWOT-анализа в тексте программы не приведено'],
+    unique: 'Использует систему лиг национального агрегированного рейтинга филиалов (движение 9 –> 8 –> 7 –> 6 лига за 2022–2026 гг.) – редкая форма отчётности, также применяемая в Высшей школе нефтегазовых технологий и энергетики; доходы от ДПО выросли более чем в 50 раз за 2023–2025 гг. (с 81 тыс. до 4,137 млн ₽).',
+    uniqMetrics: [
+      { label: 'Средний балл аттестата', fact: 4.3, factYear: 2025, plan: [4.03, 4.05, 4.06, 4.07, 4.08, 4.10, 4.20], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '' },
+      { label: 'Доходы от ДПО', fact: 4.137, factYear: 2025, plan: [3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 10.0], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' млн ₽' },
+      { label: 'Публикации, пособия 2024–2026 (факт)', fact: 20, unit: ' ед.' },
+      { label: 'Публикации ВАК', fact: 6, factYear: 2026, plan: [7, 7, 8, 8, 10, 15], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Публикации Scopus/WoS', fact: 2, factYear: 2026, plan: [2, 3, 3, 4, 4, 5], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Объекты интеллектуальной собственности', fact: 2, factYear: 2026, plan: [2, 3, 3, 4, 4, 6], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Доходы от НИОКР и экспертной деятельности', fact: 0.5, factYear: 2026, plan: [0.8, 1.2, 1.8, 2.3, 3.0, 5.0], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' млн ₽' },
+      { label: 'Доходы УПК', fact: 0.1, factYear: 2026, plan: [0.5, 1.0, 1.8, 2.5, 3.0, 5.0], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' млн ₽' },
+      { label: 'Производственные заказы УПК', fact: 3, plan: [8, 15, 25, 35, 50, 80], factYear: 2026, planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Студенты, вовлечённые в УПК', fact: 20, factYear: 2026, plan: [40, 60, 80, 100, 120, 150], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' чел.' },
+      { label: 'Собственные разработки и тренажёры УПК', fact: 1, factYear: 2026, plan: [3, 5, 8, 10, 12, 20], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Контингент СПО', fact: 1120, factYear: 2026, plan: [1150, 1200, 1250, 1280, 1300, 1500], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' чел.' },
+      { label: 'Контингент ВО', fact: 500, factYear: 2026, plan: [550, 600, 630, 660, 700, 800], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' чел.' },
+      { label: 'Доля целевого приёма', fact: 25, factYear: 2026, plan: [30, 35, 40, 45, 50, 70], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '%' }
+    ]
+  },
+  {
+    id: 'vnsh', name: 'Высшая нефтяная школа', short: 'ВНШ', color: '#c97b2b',
+    contingent: 797, contingentPlan: null, employment: 95, dpoIncome: null, niokrIncome: null, ege: 65.3, egePlan: 76.4,
+    strategic: ['Техника и технологии для ТЭК','Лидирующие нефтяные школы','Инженерный образовательный центр'],
+    projects: [
+      { name: 'Бакалавриат "Химическая технология реагентов"', implementation: 'Запуск в 2026 г.' },
+      { name: 'Новые профили (робототехника, автоматизация)', implementation: 'Совместные программы с другими школами (ВШЦТ, ПШ).' },
+      { name: 'Магистратуры по бурению, менеджменту, химии', implementation: 'Запуск в 2027 и 2030 гг.' },
+      { name: 'Научная школа по трудноизвлекаемым запасам', implementation: '«Решение технико-технологических проблем освоения нефтегазовых месторождений трудноизвлекаемых запасов в районах Крайнего Севера»: ресурсосберегающие технологии добычи, нефтепромысловая химия, геолого-промысловые изыскания.' },
+      { name: 'Целевая аспирантура', implementation: 'Защиты: Севостьянов – 2028 (1.6.11), Колосов – 2030 (2.8.4), план 2031 (2.8.2); отдельно – специальность 1.4.4 Физическая химия, не менее 1 защиты ежегодно.' },
+      { name: 'Сетевые формы обучения с ведущими вузами', implementation: '21.03.01 – ПНИПУ, СПбГУ; 21.04.01 – СПбГУ, ВШН; 18.04.01 – ТПУ.' },
+      { name: 'Грантовые заявки 2026 года', implementation: 'Заявка на молодёжную лабораторию; 5 заявок в РНФ (Осницкий, Бояр, Клименко, Попова, Королев); проработка 2 заявок для Фонда НТР Югры.' },
+      { name: 'Проект 1.2.1 (Стратегическая цель №1 ЮГУ)', implementation: 'Комплекс технологий противодействия осложнениям при разработке и эксплуатации месторождений Западно-Сибирской нефтегазоносной провинции.' },
+      { name: 'Проект 1.2.2 (Стратегическая цель №1 ЮГУ)', implementation: 'Лаборатория управляемой трансформации высокомолекулярных компонентов нефти: углеродные материалы и нефтехимическое сырьё.' },
+      { name: 'Развитие учебно-производственных комплексов и полигонов', implementation: 'Учебный центр по направлению «бурение», УПК по 15 УГСН.' },
+      { name: 'Развитие кампуса (имиджевые проекты)', implementation: 'Брендирование аудиторий и холлов в стиле РН, ГПН; перепланировка пространств.' }
+    ],
+    priorities: ['Расширение траекторий, сетевые формы','Рост НИОКР и публикаций в изданиях «белого списка»','Междисциплинарное СНО со 2 курса','Персональный подход к ИПР (статусы «исследователь», «академический», «консультант-эксперт», «практик»)','Выпуск студентов с удостоверениями по рабочей профессии','Цикл непрерывного обучения без отрыва от производства в компаниях-партнёрах','Практика/стажировка вне образовательного процесса, в т.ч. с наставниками','Обновление технического оснащения учебно-лабораторного комплекса'],
+    strengths: ['>95% трудоустройства, топ-5 в УрФО, 52/172 в РФ по УГСН 21.00.00','Методическая и лабораторная база, квалифицированный педагогический состав, короткие сроки обучения','Гранты РНФ, Фонд НТР Югры, стартапы','6 патентов, пройдена профессионально-общественная аккредитация','Активный участник всех проектов Стратегической цели №3 ЮГУ «Команды молодых»'],
+    problems: ['Загруженность НПР – риск при открытии новых направлений','Устаревшая научная инфраструктура, требует ремонта'],
+    unique: 'Совпадающие с ВШГН плановые показатели доходов от НИОКР на 1 НПР (922,4 тыс. руб. к 2036).',
+    uniqMetrics: [
+      { label: 'Гранты РНФ (за 3 года)', fact: 6, unit: ' ед.' },
+      { label: 'Доходы от НИОКР на 1 НПР, тыс. руб.', fact: 260.2, factYear: 2025, plan: [374.3, 429.4, 493.6, 569.4, 662.8, 731.1, 922.4], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽'},
+      { label: 'Доходы от ДПО на 1 НПР, тыс. руб.', fact: 90.7, factYear: 2025, plan: [125.0, 200.0, 250.0, 290.0, 297.7, 312.8, 400.5], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Средний балл ЕГЭ (УГСН 21.00.00)', fact: 61.7, factYear: 2025, plan: [63.4, 64.7, 66.2, 68.1, 70.7, 71.6, 76.4], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '' },
+      { label: 'Доходы от НТУ на 1 НПР, тыс. руб.', fact: 45.5, factYear: 2025, plan: [62.5, 77.3, 80.1, 99.4, 103.1, 106.7, 120.0], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Доходы от РИД на 1 НПР, тыс. руб.', plan: [3.7, 4.5, 5.3, 6.0, 7.1, 14.2], planYears: [2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Иностранные студенты, %', fact: 3.87, factYear: 2025, plan: [4.22, 4.87, 5.23, 6.35], planYears: [2027, 2029, 2031, 2036], unit: '%' }
+    ]
+  },
+  {
+    id: 'vshp', name: 'Высшая школа права', short: 'ВШП', color: '#8b4a8c',
+    contingent: 320, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: 9.0, ege: null, egePlan: null,
+    strategic: ['Правовое обеспечение технологического суверенитета и устойчивого развития Севера и Арктики','К 2036 году – конкурентоспособный центр подготовки юридических кадров, интегрированный в научно-технологическую повестку ЮГУ'],
+    projects: [
+      { name: 'Экспертно-консультационный центр ВШП', implementation: 'Экспертиза управления РИД и интеллектуальной собственностью, криминологическая экспертиза (по запросам правоохранительных органов, власти, бизнеса), научно-правовая экспертиза НПА и правовой аудит. План: ≥10 экспертных заключений в год, участие в ≥3 междисциплинарных проектах ЮГУ ежегодно.' },
+      { name: 'Лаборатория правового обеспечения цифровой трансформации', implementation: 'Три направления: нормативное регулирование цифровых платформ и инфраструктуры; правовое обеспечение цифровой трансформации государственного и муниципального управления; правовое регулирование искусственного интеллекта и больших данных.' },
+      { name: 'Юридическая клиника 2.0', implementation: 'Региональный центр бесплатной юридической помощи и правового просвещения: ≥300 обращений граждан в год, охват просветительскими мероприятиями ≥500 школьников и студентов; дистанционные консультации, публичные лекции, выездные приёмы; Студенческая служба медиации; корпус независимых наблюдателей «За чистые выборы».' },
+      { name: 'Базовая кафедра муниципального права и урбанистики', implementation: 'Договор с Администрацией г. Ханты-Мансийска от 29.10.2018, Положение СМК ЮГУ БК-04-2020. Четыре функции: научная (концепция «гуманитарного наукограда»), образовательная (практика студентов, руководство ВКР), экспертная (экспертиза муниципальных актов), событийная (ежегодные всероссийские мероприятия).' },
+      { name: 'Зеркальная лаборатория с НИУ ВШЭ', implementation: 'Конкурс «Зеркальные лаборатории» НИУ ВШЭ, паритетное финансирование до 4 млн руб./год с каждой стороны, совместные исследования и публикации, соглашение о распределении интеллектуальных прав, вовлечение студентов и аспирантов.' },
+      { name: 'Проект «Конституция для юных граждан: просто о главном»', implementation: 'Грант Губернатора Югры (июнь 2025 – июнь 2026). Книга тиражом 250 экз., охват 446 участников (149% от плана), 87 публикаций в соцсетях и на Детском портале Ханты-Мансийска, 5 видеороликов, 49 карточек, 19 мероприятий (190% от плана). 83,3% школьников показали высокий уровень знаний Конституции, 91,1% выразили желание продолжить встречи по праву.' },
+      { name: 'Грант Фонда НТР Югры', implementation: '«Создание технологий изготовления полых заготовок для нефтегазового комплекса на установке центробежного литья под высоким давлением» – 1,4 млн руб., совместно с Высшей нефтяной школой.' },
+      { name: 'Технологический запрос Минобрнауки Архангельской области', implementation: '«Теоретические основы обеспечения стратегической безопасности и территориального расселения в Арктической зоне РФ» – в рамках госзадания.' },
+      { name: 'VII Всероссийская конференция «Новые векторы развития местного самоуправления»', implementation: 'Экспертная площадка на базе ЮГУ с Администрацией г. Ханты-Мансийска; участники – СПбГУ, УрГЮУ им. В.Ф. Яковлева, НИУ ВШЭ, ОмГУ им. Ф.М. Достоевского, ТюмГУ, ХМГМА.' },
+      { name: 'Дискуссионная площадка по цифровому праву', implementation: 'В рамках XVII Международного ИТ-Форума с участием стран БРИКС и ШОС, совместно с Адвокатской палатой ХМАО-Югры; мастер-класс по защите персональных данных, награждение призёров конкурса «Адвокатура: традиции и инновации в цифровую эпоху».' },
+      { name: 'Профильный правовой класс на базе МБОУ СОШ № 8 г. Ханты-Мансийска', implementation: 'Открыт 10 класс, обеспечивающий раннее вовлечение школьников в юридическую профессию.' },
+      { name: 'Первая каникулярная смена для правовых волонтёров', implementation: 'Март–апрель 2026, инициатива «Смена для школьников Страна Знани-Я» при поддержке Ассоциации юристов России; экскурсии в УФССП, суд, Госавтоинспекцию, УМВД; игра «Праворубка». Партнёры: Департамент образования, УФССП, Суд, Госавтоинспекция, УМВД.' }
+    ],
+    priorities: ['Профиль «Юрист в публично-правовой сфере» (набор с 2026 года)','Модуль «Цифровой юрист» с дополнительной квалификацией (с 2026 года)','Профессионально-общественная аккредитация (2030)','Сетевые программы по цифровому праву; актуализация ОП под специалитет (5 лет)','Школа правовых волонтёров (модель «ученик – ученику»)','Кадровая политика: сочетание целевого рекрутинга и «выращивания» через аспирантуру (≥30% НПР в год)','Работа с выпускниками: развитие HR-бренда, вовлечение в Фонд целевого капитала ЮГУ'],
+    strengths: [
+      'Образовательные программы 40.03.01 и 40.04.01 «Юриспруденция» – аккредитация Ассоциации юристов России (2025)',
+      'Аспирантура: специальности 5.1.2 «Публично-правовые науки» и 5.1.4 «Уголовно-правовые науки»',
+      'Диссертационный совет Д 99.2.100.02 по уголовно-правовым наукам',
+      'Инфраструктура: криминалистическая лаборатория, библиотека, компьютерные классы, юридическая клиника',
+      'Впервые заключён договор со Следственным управлением СК России по ХМАО-Югре на криминологическую экспертизу',
+      'Подано 7 заявок на грантовые конкурсы (2025–2026)'
+    ],
+    problems: ['Стартовая доля молодых остепенённых учёных – 0% (при штате 20 человек)'],
+    unique: 'Единственное подразделение с направлением «правовое обеспечение технологического суверенитета» и зафиксированным первым в истории школы договором со Следственным управлением СК РФ; единственное с собственным диссертационным советом (Д 99.2.100.02).',
+    uniqMetrics: [
+      { label: 'Молодые остепенённые учёные', fact: 0, factYear: 2026, plan: [10], planYears: [2036], unit: '%' },
+      { label: 'Доходы от ДПО на 1 НПР', fact: 25, factYear: 2026, plan: [110], planYears: [2036], unit: ' тыс. ₽' },
+      { label: 'Объём НИОКР', fact: 5, factYear: 2026, plan: [9], planYears: [2036], unit: ' млн ₽' },
+      { label: 'Договоры с реальным сектором', fact: 2, factYear: 2026, plan: [5.5], planYears: [2036], unit: ' млн ₽' },
+      { label: 'Защиты диссертаций аспирантами', fact: 1, factYear: 2026, plan: [5], planYears: [2036], unit: ' ед.' },
+      { label: 'Экспертные заключения', fact: 1, factYear: 2026, plan: [12], planYears: [2036], unit: ' ед.' },
+      { label: 'Студенческие правопросветительские проекты', plan: [5], planYears: [2036], unit: ' ед./год' },
+      { label: 'Воспитательные мероприятия', plan: [30], planYears: [2036], unit: ' ед./год' }
+    ]
+  },
+  {
+    id: 'coi', name: 'Центр образовательного инжиниринга', short: 'ЦОИ', color: '#3f8c8c',
+    contingent: 0, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Образовательные инновации','Интеграционное ядро университета','Цифровые образовательные решения'],
+    projects: [
+      { name: 'Проект 1.1: Система образовательных игропрактик', implementation: 'Разработка и масштабирование системы образовательных игропрактик в образовательном процессе ЮГУ (2025–2030).' },
+      { name: 'Проект 1.2: Студенческое сообщество игропрактиков', implementation: 'Создание и поддержка клуба игропрактиков (2025–2036).' },
+      { name: 'Проект 1.3: Коммерциализация деловых игр и РИД', implementation: 'Коммерциализация деловых игр и результатов интеллектуальной деятельности (2026–2036).' },
+      { name: 'Проект 2.1: Автоматизированные электронные учебные курсы (ЭУК)', implementation: 'Развитие ЭУК для индивидуальных учебных планов (2025–2030).' },
+      { name: 'Проект 2.2: Цифровая трансформация общеуниверситетского модуля', implementation: 'Интеграция искусственного интеллекта и предиктивной аналитики в образовательные процессы (2026–2036).' },
+      { name: 'Проект 3: Воспитательная работа на основе историко-культурного наследия', implementation: 'Развитие системы воспитательной работы и патриотического воспитания (2025–2036).' },
+      { name: 'Проект 4.1: Линейка программ ДПО по бережливым и управленческим технологиям', implementation: 'Создание и развитие линейки программ (2025–2036).' },
+      { name: 'Проект 4.2: Система дополнительного образования школьников по бережливому производству', implementation: 'Создание и развитие системы ДО школьников по направлению бережливое производство и управление качеством (2026–2036).' }
+    ],
+    priorities: ['Лидерство в проектах "Пространство возможностей", "Корпоративный университет ЮГУ", "Лин-университет" (роль «лидер» в 3 из 13 проектов Программы развития ЮГУ-2036)','Роль эксперта в 4 проектах и координатора в 1 проекте Программы развития по всем трём стратегическим целям','Кадровое развитие: «выращивание своих в инкубаторе» – потенциальные тьюторы формируются ежегодно с 2027 по 2036 гг., плюс привлечение молодых остепенённых кадров извне (2026 – 2 чел.)'],
+    strengths: ['Единственное подразделение, формально закреплённое как лидер, эксперт, координатор или разработчик сразу в 13 именных проектах Программы развития ЮГУ','Чёткая методология вклада в региональный показатель (доля исследователей до 39 лет в регионе – 55% к 2030 году)','Широкая партнёрская сеть: ООО «Газпромнефть-Хантос», ООО «Газпромнефть-Энергосистемы», АУ «Региональный институт управления», Технопарк высоких технологий ХМАО-Югры, АО «ЮТЭК-Региональные сети», АО «Юрга-Экология», ООО «РН-Бурение», АО «Севречфлот», органы власти ХМАО-Югры и др.'],
+    problems: ['Отсутствие собственного контингента студентов ограничивает применимость типовых образовательных показателей (ЕГЭ, трудоустройство и т.п.)'],
+    unique: 'Единственное подразделение без собственного контингента студентов; выполняет методологическую роль ядра для нескольких других подразделений, в первую очередь для Высшей школы гуманитарных наук.',
+    uniqMetrics: [
+      { label: 'Молодые учёные', plan: [13, 14, 16], planYears: [2028, 2031, 2036], unit: '%' },
+      { label: 'Доходы от РИД на 1 НПР', plan: [11, 13, 15], planYears: [2028, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Доходы от ДПО на 1 НПР', plan: [110, 240, 401], planYears: [2028, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Слушатели ДПП', plan: [800, 1168, 1582], planYears: [2028, 2031, 2036], unit: ' чел.' }
+    ]
+  },
+  {
+    id: 'psh', name: 'Политехническая школа', short: 'ПШ', color: '#a65d7a',
+    contingent: null, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Технологический суверенитет','Энергетическая безопасность','Формирование бренд-активов'],
+    projects: [
+      { name: 'Портфель минимально полезных продуктов (МПП)', implementation: 'Электроболид, стенд теста изоляции, поиск ОЗЗ – разработка и создание действующих прототипов; резерв финансирования 1 млн ₽.' },
+      { name: 'Пилотный запуск учебно-производственного комплекса (УПК)', implementation: 'Через цепочку: междисциплинарные, внешние и межшкольные инициативы  –>  создание портфеля МПП  –>  пилотный запуск УПК.' },
+      { name: 'Профильные классы и Инженерная мастерская, техно-хакатоны', implementation: 'Организация дополнительного образования для школьников и студентов; ответственные – Кузнецова И.Н., Козлова Ю.С. (профильные классы), Зубкова К.П., Исаева О.Л. («Инженерная мастерская», техно-хакатоны).' },
+      { name: 'Ретроспективные проекты (анализ опыта компаний ООО ЮЛК, ОКБ ХМ, АО ЮРЭСК)', implementation: 'Изучение успешных практик предприятий для формирования новых проектов; ответственные – Парамзин А.О. (ЮЛК, ОКБ ХМ), Черников В.М. (ЮРЭСК).' },
+      { name: 'Тиражирование лучших практик по образовательным направлениям', implementation: 'Тиражирование практик по 13.03.02 «Электроэнергетика и электротехника»; аккредитация 27.03.05 «Инноватика»; создание «буфера» по 08.03.01 «Строительство» и 20.03.01 «Техносферная безопасность».' },
+      { name: 'Расширение географии рекрутинга', implementation: 'Работа с обучающимися притрассовых городов и посёлков (Стрежевой, Пойковский, Свердловская область, Курган), расширение охвата на Сибирский федеральный округ.' },
+      { name: 'Развитие кадрового резерва через защиты диссертаций', implementation: 'Кандидатские: 2027 – Долгих Н.Н.; 2028 – Черников В.М., Исаева О.Л.; 2029 – Ниязов А.Р., Зубкова К.П. Докторские: 2027 – Шепелев А.О., Козлова Ю.С.; 2029 – Кузнецова И.Н.' }
+    ],
+    priorities: ['Рост среднего балла ЕГЭ на 0,5–0,7 балла в год по ключевым направлениям','Развитие сетевых программ, расширение географии рекрутинга','Коммерциализация разработок, развитие ассоциации выпускников и трудовых династий','Целевой приём – 75% мест по квоте; рост числа иностранных студентов на 2–3 чел./год; рост числа программ ДПО на 1–2 программы/год','Управленческая модель: признание права на риск, публичная отчётность, анонимная обратная связь, управление по отклонениям, наставничество'],
+    strengths: ['Квалифицированная команда с преемственностью поколений; уникальная лабораторная база','Индустриальные партнёрства','Опыт участия в федеральных проектах (УМНИК, "Родные города")','Партнёрство с ведущими инженерными школами и вузами: ЧувГУ, ВОЕНМЕХ, ИЦК «Кронштадт», УрФУ, корпоративные университеты','Наличие детализированного SWOT-анализа с закреплением ответственных лиц за каждой инициативой'],
+    problems: ['Разобщённость специальностей внутри школы; неравномерная узнаваемость бренда','Проседающие направления; неосвоенные резервные средства','Угрозы: демографический спад в регионе, несоизмеримость прироста мест и абитуриентов, нестабильность финансирования, высокая конкуренция соседних вузов, риск потери ключевых сотрудников'],
+    unique: 'Единственная программа с полноформатным SWOT-анализом и с закреплением персональной ответственности конкретных сотрудников за конкретные инициативы.',
+    uniqMetrics: [
+      { label: 'НПР до 39 лет', fact: 13, plan: [15], planYears: [2036], unit: ' чел.' },
+      { label: 'Остепенённость до 39 лет', fact: 5, plan: [10], planYears: [2036], unit: ' чел.' },
+      { label: 'ППС с ЗП ≥200% от средней', fact: 48, unit: '%' },
+      { label: 'Потенциал финансирования', fact: 16.8, plan: [37], unit: ' млн ₽' },
+      { label: 'Потенциал доходов от ДПО на 1 НПР', plan: [200], unit: ' тыс. ₽' }
+    ]
+  },
+  {
+    id: 'neft_in', name: 'Нефтяной институт (филиал, город Нижневартовск)', short: 'НефтИн', color: '#4d7f4d',
+    contingent: 1850, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Флагман среднего профессионального образования для нефтегазовой отрасли','Инновационное развитие','Реальный сектор экономики','Миссия: подготовка высококвалифицированных, конкурентоспособных специалистов среднего звена для нефтегазовой промышленности и других системообразующих организаций реального сектора экономики региона'],
+    projects: [
+      { name: 'Членство в кластерах Профессионалитета: «ПрофЮграТЭК» и «ЮГРА НГК Проф»', implementation: '«ПрофЮграТЭК» (ТЭК): ООО «Газпромнефть Энергосистемы», АО «ЮТЭК-РС», ПАО «Газпром нефть», ПАО «Ростелеком», «БурСервис». «ЮГРА НГК Проф» (добыча полезных ископаемых): ООО «ЛУКОЙЛ-Западная Сибирь» и дочерние структуры.' },
+      { name: 'Учебно-производственный комплекс «Многопрофильный»', implementation: 'Образовательная группа функций (практическая подготовка, временное трудоустройство, повышение квалификации) и производственно-экономическая (хоздоговорные работы, коммерческие услуги, внебюджетный доход). Прикладной R&D: подбор рецептур буровых/тампонажных растворов, реинжиниринг и импортозамещение деталей, цифровая оптимизация КИПиА, энергоаудит. Экспертные услуги: лабораторные экспресс-анализы, дефектоскопия и неразрушающий контроль, тарировка и калибровка датчиков, сертификация рабочих.' },
+      { name: 'Проект 2.3.2: Деятельностные практики. Развитие: Практика в деле', implementation: 'Часть Задачи 2.3 программы развития ЮГУ («ЮГУ многофункциональный»), реализуется совместно с проектом 2.3.1 (УПК «Многопрофильный»).' },
+      { name: 'Матрица прикладных НИОКР по 4 технологическим блокам', implementation: 'Блок «Геология, бурение и разработка» (21.02.01, 21.02.02, 21.02.10) – оптимизация буровых растворов, цифровые геологические модели. Блок «Даунстрим и аналитика» (18.02.09, 18.02.12) – контроль качества товарной нефти, экспресс-методики деэмульсации. Блок «Транспорт и механика» (21.02.03, 15.02.12) – надёжность трубопроводов, антикоррозийные покрытия. Блок «Автоматизация, энергетика и ИБ» (15.02.14, 08.02.09, 13.02.12, 10.02.05) – кибербезопасность АСУ ТП, энергоэффективность электрооборудования.' },
+      { name: 'Единое электронное информационно-образовательное пространство "ЮГУ – Филиалы"', implementation: 'Интеграция цифровых сервисов, синхронизация образовательных программ СПО и ВО, ускоренное получение высшего образования выпускниками.' },
+      { name: 'ВКР как стартап', implementation: 'Выпускной проект как готовый бизнес-процесс или продукт, приносящий доход на базе УПК (например, линия по регенерации отработанных масел); 100% тем ВКР по «Профессионалитету» формулируются техсоветами предприятий-партнёров с расчётом экономического эффекта.' },
+      { name: 'Открытие новой образовательной программы', implementation: '09.02.11 Разработка и управление программным обеспечением – приоритетное направление модернизации и технологического развития экономики РФ.' }
+    ],
+    priorities: ['Шесть принципов образовательной политики: практико-ориентированность, полный цикл, гибкость, наставничество, междисциплинарность, конкурентоспособность','Сетевая форма реализации до 80% программ СПО к 2036 году; электронное обучение – до 80% программ','Формирование модели непрерывного образования СПО – ВО – ДПО','Финансово-экономическая политика: краткосрочно (2026–2031) – расширение программ ДПО, круга благотворителей, коммерциализация УПК, грантовая деятельность; долгосрочно (2031–2036) – рост контингента платных услуг не менее чем в 1,5 раза, доля ДПО до 4,5% от ПДД','Развитие инфраструктуры: принципы «комфортность», «безопасность», «Умный кампус»; расширение коворкинг-зон и фаблабов'],
+    strengths: ['Самый крупный контингент среди рассмотренных подразделений (1850 студентов) и самая долгая история (с 1984 года)','Каждый восьмой работник нефтяной отрасли города – выпускник института','Широкая партнёрская сеть – свыше 30 предприятий, свыше 100 договоров на практику','Свыше 7000 подготовленных специалистов за время существования, из них около 500 – с дипломом с отличием','72% преподавателей имеют первую или высшую квалификационную категорию, 11% удостоены почётных отраслевых званий.'],
+    problems: ['Внутренние ограничения: отставание материально-технической базы от темпов развития производства; нехватка оснащения для проведения демонстрационного экзамена по ряду направлений; дефицит цифровых компетенций у педагогического и административного персонала; недостаточное использование дистанционных форматов обучения; нехватка сетевых партнёров, целевого обучения и баз практики; низкий уровень участия преподавателей в конференциях; слабое развитие международного сотрудничества','Кадровые проблемы: дефицит квалифицированных педагогических кадров, формализм в системе повышения квалификации, сложности привлечения и закрепления молодых педагогов, высокая текучесть кадров','Внешние угрозы: рост конкуренции на региональном рынке образования; риск сокращения федерального/регионального/внебюджетного финансирования; неготовность коллектива к быстрой модернизации программ; неопределённость перспектив отрасли и возможная переориентация на экологическую повестку; рост миграционной активности; репутационные риски при снижении качества подготовки'],
+    unique: 'Единственный документ с отдельным разделом SWOT-анализа в табличной форме и детализированной матрицей направлений прикладных НИОКР по четырём технологическим блокам специальностей.',
+    uniqMetrics: [
+      { label: 'Иностранные студенты', fact: 27, factYear: 2025, unit: ' чел.' },
+      { label: 'Молодые педагоги до 39 лет', fact: 26, factYear: 2025, unit: '%' },
+      { label: 'Педагоги до 35 лет', plan: [40, 50], planYears: [2031, 2036], unit: '%' },
+      { label: 'Сетевые программы СПО (доля программ)', plan: [80], planYears: [2036], unit: '%' },
+      { label: 'Электронное обучение (доля программ)', plan: [80], planYears: [2036], unit: '%' },
+      { label: 'Слушатели ДПО', plan: [250, 380], planYears: [2031, 2036], unit: ' чел.' },
+      { label: 'Разработанные программы ДПО', plan: [19, 26], planYears: [2031, 2036], unit: ' ед.' },
+      { label: 'Обучающиеся СПО в сети «Открытый колледж»', plan: [50, 80], planYears: [2031, 2036], unit: '%' },
+      { label: 'Обучающиеся по гибким/персонализированным программам', plan: [80, 100], planYears: [2031, 2036], unit: '%' },
+      { label: 'Обучающиеся по программам ТОП-50', plan: [20, 40], planYears: [2031, 2036], unit: '%' },
+      { label: 'Программы, разработанные с работодателями', plan: [60, 80], planYears: [2031, 2036], unit: '%' },
+      { label: 'Демонстрационный экзамен (уровень нац./межд. стандартам)', plan: [80, 100], planYears: [2031, 2036], unit: '%' },
+      { label: 'Вовлечённость в молодёжные организации/кружки', plan: [60, 75], planYears: [2031, 2036], unit: '%' },
+      { label: 'Вовлечённость в волонтёрство', plan: [25, 30], planYears: [2031, 2036], unit: '%' },
+      { label: 'Школьники в профориентационных программах', plan: [600, 800], planYears: [2031, 2036], unit: ' чел.' },
+      { label: 'Партнёрские программы с нефтегазовыми предприятиями', plan: [6, 9], planYears: [2031, 2036], unit: ' ед.' },
+      { label: 'Партнёрские программы со школами', plan: [10, 18], planYears: [2031, 2036], unit: ' ед.' },
+      { label: 'ПР, прошедшие ПК по новым методикам преподавания', plan: [40, 100], planYears: [2031, 2036], unit: '%' },
+      { label: 'ПР/рук., прошедшие стажировку на предприятиях/в вузах', plan: [20, 40], planYears: [2031, 2036], unit: '%' }
+    ]
+  },
+  {
+    id: 'ishts', name: 'Инженерная школа цифровых технологий', short: 'ИШЦТ', color: '#b07c3e',
+    contingent: 303, contingentPlan: 500, employment: null, dpoIncome: 3.0, niokrIncome: 20.0, ege: 67.9, egePlan: 76.4,
+    strategic: ['Модель цифрового образования с искусственным интеллектом','Интеграция искусственного интеллекта во все этапы обучения'],
+    projects: [
+      { name: 'Магистратура «Цифровые технологии для ТЭК»', implementation: '01.04.02 Прикладная математика и информатика – запуск в 2027 году.' },
+      { name: 'Магистратура «Анализ и обработка данных (Big Data)»', implementation: '09.04.04 Программная инженерия – запуск в 2029 году.' },
+      { name: 'Магистратура 09.04.04 на английском языке', implementation: 'Запуск в 2029 году, для увеличения числа иностранных студентов.' },
+      { name: 'Программы международной академической мобильности', implementation: 'С 2028 года – Китай, Бангладеш, Индия и другие страны.' },
+      { name: 'Модель цифрового образования с интеграцией ИИ', implementation: '2026–2029: разработка и апробация модели, в которой искусственный интеллект интегрирован во все этапы образовательного процесса; целевой показатель – не менее 1 публикации на 1 НПР за последние 3 года.' },
+      { name: 'Учебная лаборатория искусственного интеллекта и центры НИР', implementation: '2027: создание учебной лаборатории ИИ; развитие лабораторий комплексных цифровых решений, робототехники и автоматики, информационной безопасности.' },
+      { name: 'Гранты РНФ, Научного фонда Югры, ЕГИСУ НИОКТР', implementation: 'Пятков С.Г. – грант РНФ «Обратное моделирование в задачах анализа баланса парниковых газов и теплового режима почв Северных регионов», 5400 тыс. ₽; Аботалеб М. – грант Научного фонда Югры, 3000 тыс. ₽; Иванова Н.Д. – ЕГИСУ НИОКТР № 1025091800053-2-1.2.1, 15000 тыс. ₽.' },
+      { name: 'НИОКР по БАС и робототехнике', implementation: 'Долматов А.В., Лисимов А.А.' },
+      { name: 'Доход от интеллектуальной деятельности', implementation: 'АТК – создание интерактивных отчётов.' },
+      { name: 'Защиты аспирантов (выпуск 2026 года)', implementation: 'По направлениям: 1.1.2 – 1 защита, 1.2.2 – 1 защита, 2.3.1 – 2 защиты.' },
+      { name: 'Новые программы ДО для школьников и молодёжи', implementation: '2026–2031: олимпиадное программирование, моделирование роботов и БПЛА, программирование роботов, технологии виртуальной и дополненной реальности, 3D-моделирование.' },
+      { name: 'Новые программы ДПО для студентов и сотрудников', implementation: '2027–2036: программирование, анализ и обработка данных, цифровые технологии в профессиональной деятельности, технологии искусственного интеллекта, облачные технологии.' },
+      { name: 'Защиты диссертаций кадрового резерва', implementation: 'Исмагулов М.Е. – 2026; Тукмачева Ю.А. – 2027.' }
+    ],
+    priorities: ['Развитие кружкового движения студентов (БАС, робототехника, ИИ, математическое моделирование)','Рост доли студентов очной формы, вовлечённых в НИР, до 30%','Разработка новых программ ДПО для школьников и молодёжи'],
+    strengths: ['Растущий портфель грантового финансирования из нескольких источников одновременно (РНФ, Научный фонд Югры, ЕГИСУ НИОКТР – свыше 23 млн ₽ суммарно)','Единственная в выборке магистерская программа, изначально запланированная полностью на английском языке'],
+    problems: ['Явных проблем и SWOT-анализа в тексте программы не приведено'],
+    unique: 'Единственное подразделение, запланировавшее магистерскую программу целиком на английском языке, с ориентацией на страны Азии (Китай, Индия, Бангладеш) в академической мобильности.',
+    uniqMetrics: [
+      { label: 'Средний балл ЕГЭ по УГСН 09.00.00', fact: 67.90, factYear: 2025, plan: [68.90, 69.60, 70.50, 71.60, 73.10, 73.60, 76.40], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '' },
+      { label: 'Иностранные студенты', fact: 2.09, factYear: 2025, plan: [5, 7, 9, 10, 11, 11.5, 12.5], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '%' },
+      { label: 'Контингент очной формы', fact: 303, factYear: 2025, plan: [320, 330, 350, 370, 390, 400, 500], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' чел.' },
+      { label: 'Доходы от НИР и НИОКР', fact: 10400, factYear: 2025, plan: [5400, 7500, 10000, 12500, 14000, 16500, 20000], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Доходы от ДПП, ПП и ДО', fact: 780, factYear: 2025, plan: [800, 1200, 1500, 1700, 2000, 2400, 3000], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Молодые учёные со степенью', fact: 11.5, factYear: 2025, plan: [13, 15, 17, 20, 22, 25, 25], planYears: [2026, 2027, 2028, 2029, 2030, 2031, 2036], unit: '%' }
+    ]
+  },
+  {
+    id: 'vshfks', name: 'Высшая школа физической культуры и спорта', short: 'ВШФКиС', color: '#c45a5a',
+    contingent: null, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Человеческий капитал','Физическая культура и спорт','Здоровьесбережение','Партнёрство студента и преподавателя','Образование, наука и спорт – триединый процесс','Развитие региона – общая цель','Узнаваемость школы'],
+    projects: [
+      { name: 'Создание регионального фиджитал-центра', implementation: '' },
+      { name: 'Разработка и валидация методик инструментального контроля двигательной деятельности спортсменов, включая создание протоколов регистрации биомеханических параметров с использованием современного измерительного оборудования, а также алгоритмов обработки и интерпретации получаемых данных', implementation: '' },
+      { name: 'Разработка и апробация реабилитационно-тренировочных программ на основе применения интерактивных сенсорных систем у лиц с ОВЗ', implementation: '' },
+      { name: 'Создание многопрофильного спортивного центра', implementation: 'Обеспечивает возможности самореализации потенциала обучающихся и сотрудников, подготовку спортивных сборных команд по различным видам спорта, формирование здорового образа жизни.' }
+    ],
+    priorities: [
+      'Разработка и реализация новых образовательных программ с учётом профстандартов и кадровых потребностей отрасли, анализа перспективных направлений развития ФКиС',
+      'Техническое оснащение и методическое обеспечение образовательного процесса и образовательных программ',
+      'Разработка и внедрение современных образовательных технологий: электронное обучение, дистанционные образовательные технологии, развитие ресурсов ЭБС',
+      'Создание современной системы непрерывного образования: ДПО – специализированное высшее образование – профессиональное обучение',
+      'Применение современных технологий профессиональной ориентации',
+      'Интеграция исследовательской деятельности в учебный процесс через внедрение методов научного исследования и современных научных методик',
+      'Активное внедрение новых технологий в преподавание элективных курсов по физической культуре в течение семи семестров',
+      'Совершенствование учебного процесса: исключение дублирования тематики учебного материала, учёт обучающихся по ИУП при распределении нагрузки',
+      'Создание условий для повышения профессиональной квалификации ППС и научных работников ВШ ФКиС',
+      'Дальнейший поиск перспективных направлений научной деятельности ВШ ФКиС',
+      'Создание оптимальных условий для реализации НИД, передачи научного знания и опыта молодым учёным',
+      'Внедрение эффективной системы мотивирования и стимулирования НИД обучающихся',
+      'Повышение уровня подготовки молодых учёных ВШ ФКиС в аспирантуре и магистратуре через участие в исследовательских проектах, конкурсах, грантах',
+      'Внедрение новых подходов и организационно-финансовых механизмов коммерциализации научных исследований и разработок',
+      'Расширение географии сотрудничества в области научно-исследовательской деятельности',
+      'Повышение публикационной активности НПР и доли сотрудников ВШ ФКиС, имеющих учёные степени и звания',
+      'Разработка и внедрение инновационных методик, технологий, аппаратных и программных средств',
+      'Участие в совершенствовании и функционировании региональной системы научно-методического обеспечения подготовки спортсменов',
+      'Актуализация и расширение спектра программ ДПО для: ведущих тренеров сборных команд Югры; педагогических работников системы дошкольного, общего и дополнительного образования; студентов иных направлений подготовки, входящих в спортивные сборные команды; специалистов в области адаптивной физической культуры и адаптивного спорта',
+      'Расширение разнообразия форм реализации ДПП; рост вовлечённости НПР ВШ в реализацию программ профессиональной переподготовки и повышения квалификации',
+      'Создание проектного офиса Высшей школы ФКиС по разработке перспективных проектов в области физической культуры',
+      'Участие в разработке, согласовании и реализации документов стратегического планирования и проектов в области физической культуры и спорта',
+      'Совершенствование корпоративной среды для реализации физкультурно-спортивной деятельности студентов и сотрудников',
+      'Пропаганда истории и достижений университета, символики, престижности получения образования через участие в соревнованиях и спортивных мероприятиях',
+      'Внедрение механизмов роста популярности комплекса ГТО среди сотрудников и обучающихся'
+    ],
+    strengths: ['Целостный охват всех направлений деятельности университета применительно к спорту: образование, наука, проекты, спорт, социально-воспитательная работа, внешние связи, кадры, материально-техническая база и инфраструктура, управление, участие в социально-экономическом развитии г. Ханты-Мансийска и округа'],
+    problems: ['Отсутствие в тексте программы формализованных числовых целевых показателей затрудняет объективный мониторинг прогресса и сопоставление с другими подразделениями'],
+    unique: 'Единственное из 13 подразделений, программа которого не содержит ни одного числового целевого показателя – только качественные направления развития.',
+    uniqMetrics: []
+  },
+  {
+    id: 'vshgn', name: 'Высшая школа гуманитарных наук', short: 'ВШГН', color: '#3f7d9e',
+    contingent: 768, contingentPlan: null, employment: 98, dpoIncome: null, niokrIncome: null, ege: 71.1, egePlan: 78.6,
+    strategic: ['Инновационный центр гуманитарных наук','Подготовка кадров для устойчивого развития Севера и Арктики','Интеграция психолого-педагогического, дефектологического, филологического и медиакоммуникационного направлений','Стать ведущим центром гуманитарных компетенций и социальных инноваций в Югре через интеграцию образования, науки и практики'],
+    projects: [
+      { name: 'Центр китайского языка и культуры "Ю-Дао"', implementation: 'Изучение китайского языка, организация культурных мероприятий; академическая мобильность с Университетом Циндао.' },
+      { name: 'Лаборатория современных медиа "Вспышка"', implementation: 'Оборудованная студия для подготовки журналистов.' },
+      { name: 'Лаборатория социального проектирования', implementation: 'Площадка для разработки и реализации социальных проектов; деятельность в рамках молодёжной политики ВШГН.' },
+      { name: 'Лингво-переводческий корпус "Yugra Word Wizards"', implementation: 'Оказание переводческих и лингвистических услуг.' },
+      { name: 'Центр психолого-педагогического сопровождения "ДоброШкола"', implementation: 'Психологическая поддержка студентов, консультирование.' },
+      { name: 'Модуль "Цифровая квалификация"', implementation: 'Дополнительные квалификации по применению искусственного интеллекта в гуманитарных сферах; программы «Контент-менеджер», «Промт-инженер», «Процессный аналитик».' },
+      { name: '«Фабрика социальных проектов»', implementation: 'Организация в рамках модернизации специализированных лабораторий и центров ВШГН.' },
+      { name: 'Группа кратковременного пребывания детей', implementation: 'Элемент социальной инфраструктуры и поддержки студенческих семей.' },
+      { name: 'Студенческие консультационные клиники', implementation: 'Сеть клиник в рамках Центра социальных инноваций.' }
+    ],
+    priorities: [
+      'Обновление образовательного портфеля с акцентом на цифровую составляющую',
+      'Развитие проектно-деятельностных форматов обучения в рамках общеуниверситетских модулей',
+      'Интенсификация научных исследований через расширение грантовой деятельности',
+      'Усиление международной конкурентоспособности (англоязычные программы)',
+      'Активное участие в проектах университетской экосистемы устойчивого развития, включая «Обучение служением»',
+      'Развитие студенческих сервисных клиник и реализация бренд-стратегии Югры',
+      'Создание 5 новых цифровых профилей',
+      'Гибридные ускоренные программы для выпускников СПО',
+      'Командные мини-стажировки на базе лабораторий ВШГН; координация проектов по запросам партнёров; интеграция предпринимательской, технологической и исследовательской траекторий',
+      'Индивидуальные образовательные траектории (ИУП, проектное обучение по запросу, цифровое портфолио); пакет предложений для организаций-заказчиков',
+      'Содействие трудоустройству: рубрика о вакансиях в соцсетях, встречи с работодателями, тренинги по трудоустройству, взаимодействие с Ассоциацией выпускников',
+      'Профориентация и довузовская подготовка: профильные классы, научно-образовательные события, интерактивные форматы',
+      'Развитие ДПО: флагманские программы психологической поддержки, корпоративные языковые программы (китайский язык)',
+      'Развитие приоритетных направлений исследований: рост объёма НИОКР, формирование публикационного задела',
+      'Интенсификация грантовой деятельности: ежегодная подача не менее 2 заявок',
+      'Расширение экспертной и консультационной деятельности: лингвистические экспертизы, медиасопровождение',
+      'Поддержка молодых учёных: трудоустройство кандидатов наук до 39 лет, вовлечение студентов и аспирантов в науку через СНО, индивидуальные дорожные карты для аспирантов',
+      'Гражданско-патриотическое воспитание: проекты «СВОим помогаем: Югра», «Новая модель интеграции: образовательно-воспитательный кластер», «Запомните их имена»',
+      'Внедрение проектного управления и матричной модели: кроссфункциональные проектные команды, вовлечение сотрудников в проекты программы развития',
+      'Профессиональное развитие и мотивация сотрудников: регулярные собрания и стратегические сессии, система обратной связи, корпоративные мероприятия',
+      'Привлечение и закрепление молодых учёных: целевой подбор кандидатов и докторов наук до 39 лет, программа адаптации молодых НПР',
+      'Повышение цифровых компетенций сотрудников; участие в проекте «Корпоративный университет ЮГУ: сообщество смелых»; программа «Зелёный коридор»',
+      'Укрепление корпоративной культуры и участие в развитии эндаумент-фонда: просветительская работа о целевом капитале, участие в привлечении пожертвований',
+      'Модернизация специализированных лабораторий и центров; создание студенческих сервисных пространств',
+      'Развитие практической базы: интеграция лабораторий ВШГН в систему дополнительного образования детей (мини-стажировки для школьников)',
+      'Цифровизация инфраструктуры: участие в проекте «От цифровых сервисов к цифровой среде», разработка онлайн-курсов по направлениям ВШГН',
+      'Создание комфортной образовательной и социальной среды: развитие группы кратковременного пребывания детей, открытые лабораторные пространства (формат «школьного» ЦКП)',
+      'Участие в проектах программы развития ЮГУ: «Деятельностные практики. Развитие: практика в деле» (лаборатории ВШГН – стажировочные площадки), «Школьный университет: профильные классы», «Университет для поколения лидеров» (флагманские программы ДПО), «Позитивный университет» (креативные пространства), «Образовательные программы проектного университета» (новые профили, магистратуры), «Новый набор или набор "по-новому"» (медиастратегия, цифровой рекрутинг), «Корпоративный университет ЮГУ» (адаптация молодых НПР)'
+    ],
+    strengths: ['100% трудоустройство по ряду специальностей','1-е место в Национальном рейтинге трудоустройства по направлению «СМИ и библиотечное дело» (бакалавриат и магистратура); 9-е место – «Языкознание и литературоведение» (бакалавриат); 11-е место – «Образование и педагогические науки»','Наиболее полные из всех 13 подразделений таблицы целевых показателей – заполнены по всем пяти направлениям политики','Более 20 профильных организаций-партнёров','35 штатных НПР (+ более 50 с совместителями); доля кандидатов наук – 74%; доля докторов наук – 8,5%; доля молодых НПР до 39 лет – 37% (по данным «Портрета ВШГН»)'],
+    problems: ['Явного SWOT-раздела не приведено; вызовы сформулированы на уровне отрасли в целом'],
+    unique: 'Единственное подразделение с полностью заполненными целевыми таблицами по всем пяти направлениям управленческой политики одновременно; делит с Высшей нефтяной школой идентичный норматив по доходам от НИОКР на 1 НПР.',
+    uniqMetrics: [
+      { label: 'Доходы от НИОКР на 1 НПР', fact: 374.30, factYear: 2026, plan: [429.40, 662.80, 731.10, 922.40], planYears: [2027, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Доходы от ДПО на 1 НПР', fact: 230.90, factYear: 2026, plan: [253.50, 297.70, 312.80, 400.50], planYears: [2027, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Доля молодых учёных в НПР', fact: 11.76, factYear: 2026, plan: [12.04, 13.24, 14.03, 15.95], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Защиты кандидатских диссертаций', fact: 0, factYear: 2026, plan: [1, 1, 2, 4], planYears: [2027, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Средний балл ЕГЭ по УГСН 45.00.00', fact: 71.1, factYear: 2026, plan: [71.8, 75.3, 75.8, 78.6], planYears: [2027, 2030, 2031, 2036], unit: '' },
+      { label: 'Доля иностранных студентов', fact: 3.12, factYear: 2026, plan: [3.39, 5.02, 5.23, 6.35], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Индекс трудоустройства выпускников', fact: 1.23, factYear: 2026, plan: [1.25, 1.34, 1.35, 1.42], planYears: [2027, 2030, 2031, 2036], unit: '' },
+      { label: 'Доля студентов по целевому обучению', fact: 75, factYear: 2026, plan: [80, 80, 80, 80], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Слушатели ДПП', fact: 1905, factYear: 2026, plan: [2096, 2542, 2593, 3035], planYears: [2027, 2030, 2031, 2036], unit: ' чел.' },
+      { label: 'Охват студентов доп. квалификациями', plan: [60, 60, 60, 60], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Реализовано проектов по запросам партнёров', plan: [10, 10, 10, 10], planYears: [2027, 2030, 2031, 2036], unit: ' ед. (10+ к 2036)' },
+      { label: 'Доля внутренних затрат на НИОКР', fact: 6.48, factYear: 2026, plan: [6.57, 9.75, 9.84, 10.62], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Доходы от НТУ на 1 НПР', fact: 17.80, factYear: 2026, plan: [22.00, 53.30, 59.40, 114.10], planYears: [2027, 2030, 2031, 2036], unit: ' тыс. ₽' },
+      { label: 'Публикации в WoS/Scopus', fact: 5, factYear: 2026, plan: [6, 8, 10, 10], planYears: [2027, 2030, 2031, 2036], unit: ' ед. (10+ к 2036)' },
+      { label: 'Вовлечённость в проекты развития и патр. воспитания', fact: 80, factYear: 2026, plan: [80, 85, 86, 87], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Доля трудоустроенных выпускников', fact: 96, factYear: 2026, plan: [96, 97, 97.5, 98], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Доля НПР до 39 лет', fact: 35, factYear: 2026, plan: [35, 37, 38, 39], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Вовлечённость студентов в соц. проектирование', fact: 30, factYear: 2026, plan: [50, 50, 50, 50], planYears: [2027, 2030, 2031, 2036], unit: '% (30+/50+)' },
+      { label: 'Охват студентов мероприятиями СНО', fact: 40, factYear: 2026, plan: [45, 50, 50, 50], planYears: [2027, 2030, 2031, 2036], unit: ' чел. (50+ к 2036)' },
+      { label: 'Доля работников АУП и вспом. персонала', fact: 40.00, factYear: 2026, plan: [39.50, 38.00, 37.50, 37.00], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Вовлечённость и удовлетворённость сотрудников', fact: 67, factYear: 2026, plan: [67, 68, 69, 72], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Доля НПР с ЗП ≥200% от средней по региону', fact: 47, factYear: 2026, plan: [47, 50, 55, 60], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Вовлечённость сотрудников в проекты программы развития', fact: 50, factYear: 2026, plan: [60, 70, 70, 70], planYears: [2027, 2030, 2031, 2036], unit: '%' },
+      { label: 'Лаборатории и центры', fact: 3, factYear: 2026, plan: [4, 6, 6, 7], planYears: [2027, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Студенческие консультационные клиники', fact: 0, factYear: 2026, plan: [1, 2, 2, 3], planYears: [2027, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Онлайн-курсы ВШГН', fact: 0, factYear: 2026, plan: [1, 2, 3, 5], planYears: [2027, 2030, 2031, 2036], unit: ' ед.' },
+      { label: 'Вовлечённые в мини-стажировки на базе лабораторий', fact: 50, factYear: 2026, plan: [100, 150, 200, 300], planYears: [2027, 2030, 2031, 2036], unit: ' чел. (300+ к 2036)' },
+      { label: 'Доля внебюджетных доходов (модель-2036)', plan: [27.85], planYears: [2036], unit: '%' },
+      { label: 'Штатные НПР', fact: 35, unit: ' чел. (+50 совместители)' },
+      { label: 'Доля кандидатов наук', fact: 74, unit: '%' },
+      { label: 'Доля докторов наук', fact: 8.5, unit: '%' },
+      { label: 'Партнёры-организации', fact: 20, unit: ' ед. (20+)' }
+    ]
+  },
+  {
+    id: 'vsngt', name: 'Высшая школа нефтегазовых технологий и энергетики', short: 'ВШНГТиЭ', color: '#6b7f8c',
+    contingent: 485, contingentPlan: null, employment: null, dpoIncome: null, niokrIncome: 5.0, ege: null, egePlan: 60,
+    strategic: ['Высокие рейтинговые позиции','Качество подготовки обучающихся','Топливно-энергетический комплекс'],
+    projects: [
+      { name: 'Совместные программы с Индустриальным институтом на полигоне ООО "Газпромнефть-Хантос"', implementation: 'Разработка образовательного контента и реализация программ повышения квалификации по трём направлениям: «Машинист НСЗРАП», «Оператор товарный», «Трубопроводчик линейный».' },
+      { name: 'Экспертиза профстандарта "Специалист по контрольно-измерительным приборам и автоматике в нефтегазовой отрасли"', implementation: 'Проведена экспертиза профессионального стандарта, разработанного ПАО НК «Роснефть».' },
+      { name: 'Запуск профиля "Бурение нефтяных и газовых скважин"', implementation: 'Планируемый срок начала – 2028/2029 учебный год.' },
+      { name: 'Организация лаборатории петрофизики', implementation: 'Источники финансирования: приносящая доход деятельность, средства грантовой поддержки, пожертвования партнёров ФГБОУ ВО «ЮГУ».' },
+      { name: 'Регистрация программы для ЭВМ «CardioINS»', implementation: 'Подана заявка на регистрацию программы для ЭВМ; результат планируется коммерциализировать.' },
+      { name: 'Открытие магистратуры по направлению 21.04.01 «Нефтегазовое дело»', implementation: '' }
+    ],
+    priorities: [
+      'Расширение образовательных программ и увеличение контингента обучающихся',
+      'Формирование контингента иностранных граждан, обучающихся в ВШНГТиЭ',
+      'Достижение плановых показателей в области кадровой политики',
+      'Коммерциализация результатов научно-исследовательской деятельности',
+      'Развитие материально-технической базы ВШНГТиЭ',
+      'С 2027 года – набор на 21.03.01 "Нефтегазовое дело" с целевым баллом ЕГЭ 60+',
+      'Расширение программ дополнительного образования; формирование контингента иностранных граждан',
+      'Капитальный ремонт здания в 5-м микрорайоне г. Нефтеюганска либо передача новых площадей ЮГУ (финансирование – приносящая доход деятельность, экономия на аренде)',
+      'Участие обучающихся очной формы во всероссийских и международных конкурсах и чемпионатах («Case-in», «Россети Case Champ», «Changellenge Cup Russia» и др.)',
+      'Привлечение не менее одного доктора технических наук в штат ВШНГТиЭ (к 2036 году)',
+      'Усиление позиций в национальном агрегированном рейтинге филиалов ВУЗов: выход в 5 лигу до конца 2027/2028 учебного года, в 4 лигу – к 2036 году',
+      'Усиление позиций в рейтинге «Мониторинг эффективности деятельности ВУЗов»'
+    ],
+    strengths: [
+      'Гибкие образовательные программы под запросы предприятий ТЭК ХМАО-Югры',
+      'Территориальная близость к крупным нефтегазодобывающим предприятиям региона',
+      'Развитые базы практик',
+      'Динамично развивающийся коллектив, ориентированный на различные форматы взаимодействий с предприятиями ТЭК ХМАО-Югры',
+      'Рост в национальном агрегированном рейтинге филиалов ВУЗов: с 9 до 6 лиги (по 2026 год)',
+      '47 обучающихся ВШНГТиЭ за последние два года приняли участие в международных и всероссийских научно-практических конференциях (получены сертификаты участников, опубликованы результаты исследований)'
+    ],
+    problems: [
+      'Устойчивое снижение контингента обучающихся (602 на 01.09.2023, 559 на 01.09.2024, 485 на 01.09.2025) – явно названо вызовом',
+      'Дефицит остепенённых научно-педагогических кадров в возрасте до 35 лет',
+      'Необходимость более глубокой интеграции с партнёрами через хозяйственные договоры',
+      'Запрос рынка на увеличение количества программ высшего образования',
+      'Запрос на качественное образование с ориентацией на запросы работодателей, требующий практико-модульного подхода и сетевых форм обучения'
+    ],
+    unique: 'Единственное подразделение, где снижение контингента представлено как явный, количественно показанный вызов, а не как сглаженный факт.',
+    uniqMetrics: [
+      { label: 'Контингент', fact: 485, factYear: 2025, unit: ' чел.' },
+      { label: 'Лига нац. агрегированного рейтинга филиалов ВУЗов', fact: 6, factYear: 2026, plan: [5, 4], planYears: [2028, 2036], unit: ' лига' },
+      { label: 'Патенты и свидетельства', plan: [5, 10], planYears: [2031, 2036], unit: ' ед.' },
+      { label: 'ППС со степенью до 35 лет', plan: [20], planYears: [2031], unit: '%' },
+      { label: 'ППС со степенью до 39 лет', plan: [40], planYears: [2036], unit: '%' },
+      { label: 'Оплата труда ППС (% от средней по региону)', plan: [200], planYears: [2031], unit: '%' },
+      { label: 'Доходы НИР/НИОКР/НТУ', fact: 1, factYear: 2026, plan: [3, 5], planYears: [2027, 2031], unit: ' млн ₽' },
+      { label: 'Публикации WoS/Scopus (факт)', fact: 2, unit: ' ед.' },
+      { label: 'Статьи ВАК (факт)', fact: 5, unit: ' ед.' },
+      { label: 'Статьи РИНЦ (факт)', fact: 6, unit: ' ед.' },
+      { label: 'Учебные пособия (факт)', fact: 1, unit: ' ед.' },
+      { label: 'Тезисы докладов (факт)', fact: 6, unit: ' ед.' },
+      { label: 'Студенты – участники конференций (за 2 года)', fact: 47, unit: ' чел.' }
+    ]
+  },
+  {
+    id: 'inteh', name: 'Институт нефти и технологий (город Сургут)', short: 'ИНТех', color: '#c0523a',
+    contingent: 1296, contingentPlan: null, employment: 95, dpoIncome: 10.0, niokrIncome: null, ege: null, egePlan: null,
+    strategic: ['Драйвер экосистемы опережающей подготовки кадров','Бесшовный трек "Школа – Институт – Предприятие – Регион"'],
+    projects: [
+      { name: 'Учебно-производственный комплекс: учебное и коммерческое ядро', implementation: 'Учебное ядро – организация практик, демонстрационные экзамены, чемпионатное движение, мастер-классы от партнёров, взаимодействие с автошколами. Коммерческое ядро – стартап-студия, бизнес-акселератор, офис заказов, производственный цех (электро-мастерская, участок изготовления металлоконструкций, участок совместного производства с малым и средним предпринимательством, участок аддитивных технологий). Доходы УПК реинвестируются в оборудование и частично идут на оплату труда студентов.' },
+      { name: 'Проект ЮГУ 1.3.2: Стартап-студия ЮГУ', implementation: '' },
+      { name: 'Проект ЮГУ 2.1.2: Молодёжные промышленные маршруты Югры', implementation: 'Профориентация, кадры, устойчивое развитие.' },
+      { name: 'Проект ЮГУ 2.1.4: Фиджитал спорт', implementation: '' },
+      { name: 'Проект ЮГУ 2.2.1: Школьный университет: профильные классы', implementation: '' },
+      { name: 'Проект ЮГУ 2.2.2: От дополнительного образования к программам личностного и профессионального развития', implementation: 'Создавая будущее с ЮГУ.' },
+      { name: 'Проект ЮГУ 2.2.3: Университет для поколения лидеров', implementation: '' },
+      { name: 'Проект ЮГУ 2.2.4: Открывая ЮГУ', implementation: 'Развитие лабораторий и экспозиционных пространств.' },
+      { name: 'Проект ЮГУ 2.2.5: Позитивный университет', implementation: 'Центр городского притяжения.' },
+      { name: 'Проект ЮГУ 2.3.1: Учебно-производственный комплекс «Многопрофильный»', implementation: '' },
+      { name: 'Проект ЮГУ 2.1.2: Цифровой тьютор', implementation: '' },
+      { name: 'Проект ЮГУ 3.1.2: Новая модель интеграции', implementation: 'Образовательно-воспитательный кластер.' },
+      { name: 'Проект ЮГУ 3.2.4: Новый набор или набор «по-новому»', implementation: 'Продвижение образовательных программ.' },
+      { name: 'Проект ЮГУ 3.3.3: Лин-университет', implementation: 'Повышение производительности труда.' },
+      { name: 'Проект ЮГУ 3.3.4: От цифровых сервисов к цифровой среде', implementation: '' },
+      { name: 'Развитие компетенций в области искусственного интеллекта', implementation: 'Инструменты промышленного ИИ, диагностика оборудования, прогнозирование и оптимизация производственных процессов.' },
+      { name: 'Модернизация инфраструктуры (2024–2025)', implementation: 'Отремонтировано 3154 м² помещений, капитально отремонтирована кровля площадью 4023,6 м², модернизированы системы пожарной безопасности (АПС и СОУЭ), полностью обновлён и автоматизирован пост охраны, установлены приборы учёта энергоресурсов с автоматической передачей данных.' }
+    ],
+    priorities: ['Бесшовный трек, соединяющий школьные профпробы, целевой договор, наставничество и оплачиваемую практику','Восемь принципов образовательной политики: практико-ориентированность, полный цикл, бесшовный трек, наставничество, гибкость и вариативность, цифровая трансформация, междисциплинарность, конкурентоспособность','Диверсификация ДПО за пределы профильной технической направленности, модель «обучение под потребности конкретного предприятия»','Молодёжная политика: 4 принципа (сбалансированность, системность, развитие, поддержка), трёхкомпонентное воспитательное ядро, интеграция с «Движением Первых», ресурсный центр добровольчества','Ремонт кампуса: фасад (до 2031 г.), рекреационная зона на внешнем дворе, актовый зал, столовая'],
+    strengths: [
+      '1-е место в Российской Федерации по трудоустройству в отрасли «Топливно-энергетический комплекс» в рейтингах 2025 и 2026 годов',
+      '1-е место в общем национальном рейтинге трудоустройства СПО (портал «Работа России»), опередив Ишимбайский нефтяной колледж (2 место) и Новоуренгойский многопрофильный колледж (3 место)',
+      'Долгосрочные партнёрства: Сургутнефтегаз, Газпром переработка, Газпром трансгаз Сургут, ОГК-2, Юнипро, СПОПАТ, Восток Моторс, Россети Тюмень',
+      'Рост консолидированного бюджета с 166,3 до 246,9 млн рублей (2021–2025) и доходов от ДПО с 1,97 до 4,37 млн рублей'
+    ],
+    problems: ['Снижение общего контингента (1340 в 2021  –>  1296 в 2025) и резкое падение числа иностранных студентов (26 в 2022  –>  8 в 2025)','Снижение доли внебюджетных средств в структуре бюджета (59,9 млн рублей в 2021  –>  39,3 млн рублей в 2025)'],
+    unique: 'Единственное подразделение с полной пятилетней динамикой консолидированного бюджета в разбивке по источникам (федеральный бюджет, субсидии ХМАО-Югры, внебюджетные средства) и единственное с формулировкой «бесшовный трек» как ключевым терминологическим брендом программы; №1 сразу в двух разных национальных рейтингах трудоустройства (общем и отраслевом).',
+    uniqMetrics: [
+      { label: 'Средний балл аттестата', fact: 4.13, factYear: 2025, plan: [4.2, 4.5], planYears: [2026, 2036], unit: '' },
+      { label: 'Доходы от ДПО', fact: 4.37, factYear: 2025, plan: [4.9, 10.0], planYears: [2026, 2036], unit: ' млн ₽' },
+      { label: 'Доходы от УПК', fact: 1.5, factYear: 2026, plan: [5.0, 10.0], planYears: [2031, 2036], unit: ' млн ₽' },
+      { label: 'Контингент', fact: 1296, factYear: 2025, unit: ' чел.' },
+      { label: 'Иностранные студенты', fact: 8, factYear: 2025, unit: ' чел.' },
+      { label: 'Трудоустройство выпускников', plan: [95], planYears: [2036], unit: '%' },
+      { label: 'Освоившие цифровой модуль (СПО)', fact: 35, factYear: 2026, plan: [60, 85], planYears: [2031, 2036], unit: '%' },
+      { label: 'Договоры о целевом обучении', fact: 10, factYear: 2026, plan: [12, 15], planYears: [2031, 2036], unit: '%' },
+      { label: 'Вовлечённость в волонтёрство', fact: 4, factYear: 2026, plan: [6, 9], planYears: [2031, 2036], unit: '%' },
+      { label: 'Социально значимые проекты студентов', fact: 3, factYear: 2026, plan: [8, 15], planYears: [2031, 2036], unit: ' ед.' }
+    ]
+  },
+];
+
+function getColor(u) { return u.color || '#999'; }
+function fmt(v) { return v !== null && v !== undefined ? v : '–'; }
+function fmtNum(v) {
+  if (v === undefined || v === null || isNaN(v)) return '';
+  return (v % 1 === 0) ? String(v) : String(v).replace('.', ',');
+}
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderStats() {
+  const total = units.length;
+  const withContingent = units.filter(u => u.contingent !== null);
+  const sumContingent = withContingent.reduce((s,u) => s + u.contingent, 0);
+  const avgContingent = withContingent.length ? Math.round(sumContingent / withContingent.length) : 0;
+  const withEmploy = units.filter(u => u.employment !== null);
+  const avgEmploy = withEmploy.length ? Math.round(withEmploy.reduce((s,u) => s + u.employment, 0) / withEmploy.length) : 0;
+  const withEge = units.filter(u => u.ege !== null);
+  const avgEge = withEge.length ? (withEge.reduce((s,u) => s + u.ege, 0) / withEge.length).toFixed(1) : '–';
+  const withPlanEge = units.filter(u => u.egePlan !== null);
+  const avgPlanEge = withPlanEge.length ? (withPlanEge.reduce((s,u) => s + u.egePlan, 0) / withPlanEge.length).toFixed(1) : '–';
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="number">${avgContingent}</div><div class="label">Средний контингент студентов</div></div>
+    <div class="stat-card"><div class="number">${avgEmploy}%</div><div class="label">Среднее плановое трудоустройство</div></div>
+    <div class="stat-card"><div class="number">${avgEge}</div><div class="label">Средний текущий балл ЕГЭ</div></div>
+    <div class="stat-card"><div class="number">${avgPlanEge}</div><div class="label">Средний плановый балл ЕГЭ (2036)</div></div>
+  `;
+}
+renderStats();
+
+function renderTagCloud() {
+  const themeKeywords = {
+    'Цифровизация и ИИ': /цифр|искусственн|робот|автоматизация|big data/i,
+    'Программы ДПО': /дпо|дополнительн.*профессиональн/i,
+    'Практико-ориентированность': /практик|ориентир|предприятия|реальный сектор/i,
+    'НИОКР / гранты': /ниокр|грант|научн|исследован/i,
+    'Международная деятельность': /международн|иностранн|мобильность/i,
+    'Профориентация / школьники': /профориентац|школьник|класс/i,
+    'Сетевые программы': /сетево/i,
+    'Экологическая / климатическая': /экологи|климат|углерод|карбон|геопарк/i
+  };
+
+  const themeProjects = {};
+  Object.keys(themeKeywords).forEach(label => {
+    const projectSet = new Set();
+    units.forEach(u => {
+      u.projects.forEach(p => {
+        const text = p.name + ' ' + (p.implementation || '');
+        if (themeKeywords[label].test(text)) {
+          projectSet.add(p.name);
+        }
+      });
+    });
+    themeProjects[label] = projectSet;
+  });
+
+  const container = document.getElementById('tagCloud');
+  container.innerHTML = '';
+
+  const entries = Object.entries(themeProjects)
+    .filter(([_, set]) => set.size > 0)
+    .sort((a, b) => b[1].size - a[1].size);
+
+  if (entries.length === 0) {
+    container.innerHTML = '<span style="color:#94a3b8;">Теги не найдены</span>';
+    return;
+  }
+
+  const maxCount = entries[0][1].size;
+
+  entries.forEach(([label, projectSet]) => {
+    const count = projectSet.size;
+    const fontSize = 14 + (count / maxCount) * 16;
+    const el = document.createElement('span');
+    el.className = 'tag-item';
+    el.style.fontSize = fontSize + 'px';
+
+    const unitList = [];
+    units.forEach(u => {
+      u.projects.forEach(p => {
+        const text = p.name + ' ' + (p.implementation || '');
+        if (themeKeywords[label].test(text)) {
+          unitList.push(u.short || u.name);
+        }
+      });
+    });
+    const uniqueUnits = [...new Set(unitList)].join(', ');
+
+    el.innerHTML = `${label} <span class="count">${count}</span><span class="units">${uniqueUnits}</span>`;
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      showProjectsByTag(label, themeKeywords[label]);
+    });
+    container.appendChild(el);
+  });
+}
+renderTagCloud();
+
+function showProjectsByTag(tagLabel, regex) {
+  const overlay = document.getElementById('modalOverlay');
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+  title.textContent = `Проекты по теме: ${tagLabel}`;
+  body.innerHTML = '';
+
+  let found = false;
+  units.forEach(u => {
+    const matchingProjects = u.projects.filter(p => {
+      const text = p.name + ' ' + (p.implementation || '');
+      return regex.test(text);
+    });
+    if (matchingProjects.length > 0) {
+      found = true;
+      const div = document.createElement('div');
+      div.className = 'modal-unit';
+      const h4 = document.createElement('h4');
+      h4.textContent = u.name;
+      div.appendChild(h4);
+      const ul = document.createElement('ul');
+      matchingProjects.forEach(p => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${p.name}</strong>${p.implementation ? ': ' + p.implementation : ''}`;
+        ul.appendChild(li);
+      });
+      div.appendChild(ul);
+      body.appendChild(div);
+    }
+  });
+  if (!found) {
+    body.innerHTML = '<p>Проектов по данному тегу не найдено.</p>';
+  }
+
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.setProperty('--scrollbar-width', scrollbarWidth + 'px');
+  document.body.classList.add('no-scroll');
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.classList.remove('no-scroll');
+}
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function renderManualProjectCloud() {
+  const container = document.getElementById('projectCloud');
+  if (!manualProjects || manualProjects.length === 0) {
+    container.innerHTML = '<span style="color:#94a3b8;">Нет проектов</span>';
+    return;
+  }
+  container.innerHTML = '';
+  manualProjects.forEach(entry => {
+    const el = document.createElement('span');
+    el.className = 'project-item';
+    el.style.fontSize = '12px';
+    el.innerHTML = `<span class="proj-name">${entry.name}</span><span class="proj-unit">${entry.unit}</span>`;
+    container.appendChild(el);
+  });
+}
+renderManualProjectCloud();
+
+function renderCommonTargets() {
+  const targetMap = {
+    'Доходы от ДПО': [],
+    'Доходы от НИОКР': [],
+    'Трудоустройство': [],
+    'Средний балл ЕГЭ или аттестата': [],
+    'Контингент': [],
+    'Остепенённость и доля молодых учёных': []
+  };
+  units.forEach(u => {
+    if (u.dpoIncome !== null && u.dpoIncome !== undefined) targetMap['Доходы от ДПО'].push(u.short || u.name);
+    if (u.niokrIncome !== null && u.niokrIncome !== undefined) targetMap['Доходы от НИОКР'].push(u.short || u.name);
+    if (u.employment !== null) targetMap['Трудоустройство'].push(u.short || u.name);
+    if (u.ege !== null || u.egePlan !== null) targetMap['Средний балл ЕГЭ или аттестата'].push(u.short || u.name);
+    if (u.contingent !== null) targetMap['Контингент'].push(u.short || u.name);
+    const text = (u.unique || '') + ' ' + (u.problems || []).join(' ');
+    if (/остепен|молод.*учен|кандидат|доктор/i.test(text)) targetMap['Остепенённость и доля молодых учёных'].push(u.short || u.name);
+  });
+  const list = document.getElementById('commonTargets');
+  list.innerHTML = '';
+  Object.entries(targetMap).forEach(([label, items]) => {
+    if (items.length === 0) return;
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${label}</strong> – ${items.length} подразделений: ${items.join(', ')}`;
+    list.appendChild(li);
+  });
+}
+renderCommonTargets();
+
+function renderKeyTable() {
+  const tbody = document.getElementById('keyTableBody');
+  tbody.innerHTML = '';
+  units.forEach(u => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="color-dot" style="background:${getColor(u)};"></span> ${u.name}</td>
+      <td>${fmt(u.contingent)}</td>
+      <td>${fmt(u.contingentPlan)}</td>
+      <td>${fmt(u.employment)}</td>
+      <td>${fmt(u.ege)}</td>
+      <td>${fmt(u.egePlan)}</td>
+      <td>${fmt(u.dpoIncome)}</td>
+      <td>${fmt(u.niokrIncome)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+renderKeyTable();
+
+function renderDetailTable() {
+  const tbody = document.getElementById('detailTableBody');
+  tbody.innerHTML = '';
+  units.forEach(u => {
+    const tr = document.createElement('tr');
+    const projHtml = (u.projects || []).map(p => `<strong>${p.name}</strong>${p.implementation ? ': ' + p.implementation : ''}`).join('; ');
+    tr.innerHTML = `
+      <td><span class="color-dot" style="background:${getColor(u)};"></span> ${u.name}</td>
+      <td>${(u.strategic || []).join('; ')}</td>
+      <td>${projHtml}</td>
+      <td>${(u.priorities || []).join('; ')}</td>
+      <td>${(u.strengths || []).join('; ')}</td>
+      <td>${(u.problems || []).join('; ')}</td>
+      <td>${u.unique}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+renderDetailTable();
+
+function renderUnique() {
+  const list = document.getElementById('uniqueList');
+  list.innerHTML = '';
+  units.forEach(u => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong style="color:${getColor(u)};">${u.name}</strong> – ${u.unique}`;
+    list.appendChild(li);
+  });
+}
+renderUnique();
+
+const ringTooltipEl = document.getElementById('ringTooltip');
+
+function buildRingSVG(segments, unit) {
+  const size = 132;
+  const strokeWidth = 18;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const cx = size / 2, cy = size / 2;
+  const total = segments.reduce((s, seg) => s + Math.abs(seg.value), 0) || 1;
+  const gap = segments.length > 1 ? Math.min(9, circumference * 0.02) : 0;
+
+  let cumulative = 0;
+  const circles = segments.map(seg => {
+    const segLenFull = (Math.abs(seg.value) / total) * circumference;
+    const segLenDrawn = Math.max(segLenFull - gap, 0.0001);
+    const dasharray = `${segLenDrawn} ${circumference - segLenDrawn}`;
+    const dashoffset = -cumulative;
+    cumulative += segLenFull;
+    const yearPart = seg.year ? `${seg.year}: ` : '';
+    const tooltipText = `${yearPart}${fmtNum(seg.value)}${unit || ''}`;
+    return `<circle class="ring-segment" data-tooltip="${escapeHtml(tooltipText)}" cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${seg.color}" stroke-width="${strokeWidth}" stroke-dasharray="${dasharray.replace(/,/g, ' ')}" stroke-dashoffset="${dashoffset}" transform="rotate(-90 ${cx} ${cy})"></circle>`;
+  }).join('');
+
+  return `<svg class="metric-ring-svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}">${circles}</svg>`;
+}
+
+function attachRingTooltips(scope) {
+  scope.querySelectorAll('.ring-segment').forEach(seg => {
+    seg.addEventListener('mouseenter', () => {
+      ringTooltipEl.textContent = seg.dataset.tooltip;
+      ringTooltipEl.classList.add('visible');
+      seg.parentElement.querySelectorAll('.ring-segment').forEach(s => {
+        if (s !== seg) s.classList.add('dimmed');
+      });
+    });
+    seg.addEventListener('mousemove', (e) => {
+      ringTooltipEl.style.left = (e.clientX + 14) + 'px';
+      ringTooltipEl.style.top = (e.clientY + 14) + 'px';
+    });
+    seg.addEventListener('mouseleave', () => {
+      ringTooltipEl.classList.remove('visible');
+      seg.parentElement.querySelectorAll('.ring-segment').forEach(s => s.classList.remove('dimmed'));
+    });
+  });
+}
+
+function renderUniqueCharts() {
+  const grid = document.getElementById('uniqueChartsGrid');
+  grid.innerHTML = '';
+
+  units.forEach(u => {
+    const box = document.createElement('div');
+    box.className = 'chart-box-unique';
+    box.style.borderLeft = `5px solid ${getColor(u)}`;
+    const header = document.createElement('h4');
+    header.textContent = u.name;
+    box.appendChild(header);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'metric-circles';
+
+    (u.uniqMetrics || []).forEach(m => {
+      const segments = [];
+      if (m.fact !== undefined && m.fact !== null) {
+        const factYear = m.factYear;
+        segments.push({ value: m.fact, color: FACT_COLOR, year: factYear });
+      }
+      (m.plan || []).forEach((v, i) => {
+        const year = (m.planYears || [])[i];
+        const color = PLAN_COLOR;
+        segments.push({ value: v, color, year });
+      });
+      if (segments.length === 0) return;
+
+      const item = document.createElement('div');
+      item.className = 'metric-item';
+
+      const labelEl = document.createElement('div');
+      labelEl.className = 'metric-label';
+      labelEl.textContent = m.label;
+      item.appendChild(labelEl);
+
+      const ring = document.createElement('div');
+      ring.className = 'metric-ring';
+      ring.innerHTML = buildRingSVG(segments, m.unit);
+
+      const last = segments[segments.length - 1];
+      const hole = document.createElement('div');
+      hole.className = 'metric-ring-hole';
+      hole.innerHTML = `<div class="metric-value">${fmtNum(last.value)}${m.unit || ''}</div>` +
+                        (last.year ? `<div class="metric-year">${last.year}</div>` : '');
+      ring.appendChild(hole);
+      item.appendChild(ring);
+
+      const cap = document.createElement('div');
+      cap.className = 'metric-caption';
+      item.appendChild(cap);
+
+      wrap.appendChild(item);
+    });
+
+    if (!wrap.children.length) {
+      const note = document.createElement('div');
+      note.className = 'metric-empty';
+      note.textContent = 'Числовые показатели отсутствуют';
+      wrap.appendChild(note);
+    }
+
+    box.appendChild(wrap);
+    grid.appendChild(box);
+  });
+
+  attachRingTooltips(grid);
+}
+renderUniqueCharts();
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+    document.getElementById(this.dataset.tab).classList.add('active');
+    if (this.dataset.tab === 'tab-charts-unique') {
+      setTimeout(renderUniqueCharts, 50);
+    }
+  });
+});
+</script>
+</body>
+</html>
